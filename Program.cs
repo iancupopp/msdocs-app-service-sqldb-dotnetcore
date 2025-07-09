@@ -13,10 +13,15 @@ else
 {
     builder.Services.AddDbContext<MyDatabaseContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")));
+
+    // DEBUG: Log Redis connection string to console
+    var redisConnString = builder.Configuration["AZURE_REDIS_CONNECTIONSTRING"];
+    Console.WriteLine($"DEBUG: AZURE_REDIS_CONNECTIONSTRING = {redisConnString}");
+
     builder.Services.AddStackExchangeRedisCache(options =>
     {
-    options.Configuration = builder.Configuration["AZURE_REDIS_CONNECTIONSTRING"];
-    options.InstanceName = "SampleInstance";
+        options.Configuration = redisConnString;
+        options.InstanceName = "SampleInstance";
     });
 }
 
